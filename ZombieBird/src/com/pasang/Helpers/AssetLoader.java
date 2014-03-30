@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 
 public class AssetLoader {
+	private static final String PREFS_HIGH_SCORE = "highScore";
 
 	public static Texture texture;
 	public static Animation birdAnimation;
@@ -18,9 +19,13 @@ public class AssetLoader {
 	public static Sound dead, flap, coin;
 	public static BitmapFont font, shadow;
 	public static Preferences prefs;
-	
+
 	public static void load() {
-		
+		prefs = Gdx.app.getPreferences("Zombiebird");
+		if (!prefs.contains(PREFS_HIGH_SCORE)) {
+			prefs.putInteger(PREFS_HIGH_SCORE, 0);
+		}
+
 		texture = new Texture(Gdx.files.internal("data/texture.png"));
 		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
@@ -54,11 +59,20 @@ public class AssetLoader {
 		coin = Gdx.audio.newSound(Gdx.files.internal("data/coin.wav"));
 		flap = Gdx.audio.newSound(Gdx.files.internal("data/flap.wav"));
 		dead = Gdx.audio.newSound(Gdx.files.internal("data/dead.wav"));
-		
+
 		font = new BitmapFont(Gdx.files.internal("data/text.fnt"));
 		font.setScale(.25f, -.25f);
 		shadow = new BitmapFont(Gdx.files.internal("data/shadow.fnt"));
 		shadow.setScale(.25f, -.25f);
+	}
+
+	public static void setHighScore(int score) {
+		prefs.putInteger(PREFS_HIGH_SCORE, score);
+		prefs.flush();
+	}
+
+	public static int getHighScore() {
+		return prefs.getInteger(PREFS_HIGH_SCORE);
 	}
 
 	public static void dispose() {
@@ -67,7 +81,7 @@ public class AssetLoader {
 		coin.dispose();
 		flap.dispose();
 		dead.dispose();
-        font.dispose();
-        shadow.dispose();
+		font.dispose();
+		shadow.dispose();
 	}
 }

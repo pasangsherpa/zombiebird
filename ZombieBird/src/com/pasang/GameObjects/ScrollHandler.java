@@ -79,7 +79,7 @@ public class ScrollHandler {
 			pipe2.setScored(true);
 			AssetLoader.coin.play();
 		} else if (!pipe3.isScored()
-				&& pipe2.getX() + (pipe3.getWidth() / 2) < bird.getX()
+				&& pipe3.getX() + (pipe3.getWidth() / 2) < bird.getX()
 						+ bird.getWidth()) {
 			addScore(1);
 			pipe3.setScored(true);

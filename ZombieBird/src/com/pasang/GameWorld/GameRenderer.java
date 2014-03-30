@@ -170,31 +170,33 @@ public class GameRenderer {
 		}
 
 		if (world.isReady()) {
-			// Draw shadow first
-			AssetLoader.shadow.draw(batcher, "Touch me", (136 / 2) - (42), 76);
-			// Draw text
-			AssetLoader.font
-					.draw(batcher, "Touch me", (136 / 2) - (42 - 1), 75);
+			writeToBatcher("Touch me", (136 / 2) - (42), 76);
 		} else {
-			if (world.isGameOver()) {
-				AssetLoader.shadow.draw(batcher, "Game Over", 25, 56);
-				AssetLoader.font.draw(batcher, "Game Over", 24, 55);
+			if (world.isGameOver() || world.isHighScore()) {
+				if (world.isGameOver()) {
+					writeToBatcher("Game Over", 25, 56);
+					writeToBatcher("High Score:", 23, 106);
 
-				AssetLoader.shadow.draw(batcher, "Try again?", 23, 76);
-				AssetLoader.font.draw(batcher, "Try again?", 24, 75);
+					String highScore = AssetLoader.getHighScore() + "";
+					writeToBatcher(highScore,
+							(136 / 2) - (3 * highScore.length()), 128);
+				} else {
+					writeToBatcher("High Score!", 19, 56);
+				}
+				writeToBatcher("Try again?", 23, 76);
+				String score = world.getScore() + "";
+				writeToBatcher(score, (136 / 2) - (3 * score.length()), 12);
 			}
-			// Convert integer into String
 			String score = world.getScore() + "";
-
-			// Draw shadow first
-			AssetLoader.shadow.draw(batcher, score,
-					(136 / 2) - (3 * score.length()), 12);
-			// Draw text
-			AssetLoader.font.draw(batcher, score,
-					(136 / 2) - (3 * score.length() - 1), 11);
+			writeToBatcher(score, (136 / 2) - (3 * score.length()), 12);
 		}
 
 		batcher.end();
+	}
+
+	private void writeToBatcher(String str, int x, int y) {
+		AssetLoader.shadow.draw(batcher, str, x, y);
+		AssetLoader.font.draw(batcher, str, x - 1, y - 1);
 	}
 
 }

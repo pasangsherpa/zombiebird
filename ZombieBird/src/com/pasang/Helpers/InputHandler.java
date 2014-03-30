@@ -8,12 +8,12 @@ public class InputHandler implements InputProcessor {
 
 	private GameWorld world;
 	private Bird bird;
-	
+
 	public InputHandler(GameWorld world) {
 		this.world = world;
 		this.bird = world.getBird();
 	}
-	
+
 	@Override
 	public boolean keyDown(int keycode) {
 		return false;
@@ -35,8 +35,8 @@ public class InputHandler implements InputProcessor {
 			world.start();
 		}
 		bird.onClick();
-		
-		if (world.isGameOver()) {
+
+		if (world.isGameOver() || world.isHighScore()) {
 			world.restart();
 		}
 		return true;
