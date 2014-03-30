@@ -1,7 +1,6 @@
 package com.pasang.GameWorld;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -23,7 +22,6 @@ public class GameRenderer {
 
 	private SpriteBatch batcher;
 
-	private int gameHeight;
 	private int midPointY;
 
 	// Game Objects
@@ -35,13 +33,12 @@ public class GameRenderer {
 	// Game Assets
 	private TextureRegion bg, grass;
 	private Animation birdAnimation;
-	private TextureRegion birdMid, birdDown, birdUp;
+	private TextureRegion birdMid;
 	private TextureRegion skullUp, skullDown, bar;
 
 	public GameRenderer(GameWorld world, int gameHeight, int midPointY) {
 
 		this.world = world;
-		this.gameHeight = gameHeight;
 		this.midPointY = midPointY;
 
 		camera = new OrthographicCamera();
@@ -74,8 +71,8 @@ public class GameRenderer {
 		grass = AssetLoader.grass;
 		birdAnimation = AssetLoader.birdAnimation;
 		birdMid = AssetLoader.bird;
-		birdDown = AssetLoader.birdDown;
-		birdUp = AssetLoader.birdUp;
+		// birdDown = AssetLoader.birdDown;
+		// birdUp = AssetLoader.birdUp;
 		skullUp = AssetLoader.skullUp;
 		skullDown = AssetLoader.skullDown;
 		bar = AssetLoader.bar;
@@ -127,52 +124,62 @@ public class GameRenderer {
 
 	public void render(float runTime) {
 
-        Gdx.gl.glClearColor(0, 0, 0, 1);
-        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+		Gdx.gl.glClearColor(0, 0, 0, 1);
+		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-        shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.begin(ShapeType.Filled);
 
-        // Draw Background color
-        shapeRenderer.setColor(55 / 255.0f, 80 / 255.0f, 100 / 255.0f, 1);
-        shapeRenderer.rect(0, 0, 136, midPointY + 66);
+		// Draw Background color
+		shapeRenderer.setColor(55 / 255.0f, 80 / 255.0f, 100 / 255.0f, 1);
+		shapeRenderer.rect(0, 0, 136, midPointY + 66);
 
-        // Draw Grass
-        shapeRenderer.setColor(111 / 255.0f, 186 / 255.0f, 45 / 255.0f, 1);
-        shapeRenderer.rect(0, midPointY + 66, 136, 11);
+		// Draw Grass
+		shapeRenderer.setColor(111 / 255.0f, 186 / 255.0f, 45 / 255.0f, 1);
+		shapeRenderer.rect(0, midPointY + 66, 136, 11);
 
-        // Draw Dirt
-        shapeRenderer.setColor(147 / 255.0f, 80 / 255.0f, 27 / 255.0f, 1);
-        shapeRenderer.rect(0, midPointY + 77, 136, 52);
+		// Draw Dirt
+		shapeRenderer.setColor(147 / 255.0f, 80 / 255.0f, 27 / 255.0f, 1);
+		shapeRenderer.rect(0, midPointY + 77, 136, 52);
 
-        shapeRenderer.end();
+		shapeRenderer.end();
 
-        batcher.begin();
-        batcher.disableBlending();
-        batcher.draw(bg, 0, midPointY + 23, 136, 43);
+		batcher.begin();
+		batcher.disableBlending();
+		batcher.draw(bg, 0, midPointY + 23, 136, 43);
 
-        // 1. Draw Grass
-        drawGrass();
+		// 1. Draw Grass
+		drawGrass();
 
-        // 2. Draw Pipes
-        drawPipes();
-        batcher.enableBlending();
+		// 2. Draw Pipes
+		drawPipes();
+		batcher.enableBlending();
 
-        // 3. Draw Skulls (requires transparency)
-        drawSkulls();
+		// 3. Draw Skulls (requires transparency)
+		drawSkulls();
 
-        if (bird.shouldntFlap()) {
-            batcher.draw(birdMid, bird.getX(), bird.getY(),
-                    bird.getWidth() / 2.0f, bird.getHeight() / 2.0f,
-                    bird.getWidth(), bird.getHeight(), 1, 1, bird.getRotation());
+		if (bird.shouldntFlap()) {
+			batcher.draw(birdMid, bird.getX(), bird.getY(),
+					bird.getWidth() / 2.0f, bird.getHeight() / 2.0f,
+					bird.getWidth(), bird.getHeight(), 1, 1, bird.getRotation());
 
-        } else {
-            batcher.draw(birdAnimation.getKeyFrame(runTime), bird.getX(),
-                    bird.getY(), bird.getWidth() / 2.0f,
-                    bird.getHeight() / 2.0f, bird.getWidth(), bird.getHeight(),
-                    1, 1, bird.getRotation());
-        }
+		} else {
+			batcher.draw(birdAnimation.getKeyFrame(runTime), bird.getX(),
+					bird.getY(), bird.getWidth() / 2.0f,
+					bird.getHeight() / 2.0f, bird.getWidth(), bird.getHeight(),
+					1, 1, bird.getRotation());
+		}
 
-        batcher.end();
+		// Convert integer into String
+		String score = world.getScore() + "";
+
+		// Draw shadow first
+		AssetLoader.shadow.draw(batcher, score, (136 / 2)
+				- (3 * score.length()), 12);
+		// Draw text
+		AssetLoader.font.draw(batcher, score, (136 / 2)
+				- (3 * score.length() - 1), 11);
+
+		batcher.end();
 	}
 
 }

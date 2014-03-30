@@ -1,5 +1,8 @@
 package com.pasang.GameObjects;
 
+import com.pasang.GameWorld.GameWorld;
+import com.pasang.Helpers.AssetLoader;
+
 public class ScrollHandler {
 
 	public static final int SCROLL_SPEED = -59;
@@ -8,7 +11,10 @@ public class ScrollHandler {
 	private Grass frontGrass, backGrass;
 	private Pipe pipe1, pipe2, pipe3;
 
-	public ScrollHandler(float yPos) {
+	private GameWorld world;
+
+	public ScrollHandler(GameWorld world, float yPos) {
+		this.world = world;
 		frontGrass = new Grass(0, yPos, 143, 11, SCROLL_SPEED);
 		backGrass = new Grass(frontGrass.getTailX(), yPos, 143, 11,
 				SCROLL_SPEED);
@@ -57,11 +63,37 @@ public class ScrollHandler {
 		pipe2.stop();
 		pipe3.stop();
 	}
-	
+
 	public boolean collides(Bird bird) {
-		return (pipe1.collides(bird) || pipe2.collides(bird) || pipe3.collides(bird));
+
+		if (!pipe1.isScored()
+				&& pipe1.getX() + (pipe1.getWidth() / 2) < bird.getX()
+						+ bird.getWidth()) {
+			addScore(1);
+			pipe1.setScored(true);
+			AssetLoader.coin.play();
+		} else if (!pipe2.isScored()
+				&& pipe2.getX() + (pipe2.getWidth() / 2) < bird.getX()
+						+ bird.getWidth()) {
+			addScore(1);
+			pipe2.setScored(true);
+			AssetLoader.coin.play();
+		} else if (!pipe3.isScored()
+				&& pipe2.getX() + (pipe3.getWidth() / 2) < bird.getX()
+						+ bird.getWidth()) {
+			addScore(1);
+			pipe3.setScored(true);
+			AssetLoader.coin.play();
+		}
+
+		return (pipe1.collides(bird) || pipe2.collides(bird) || pipe3
+				.collides(bird));
 	}
-	
+
+	private void addScore(int increment) {
+		world.addScore(increment);
+	}
+
 	public Grass getFrontGrass() {
 		return frontGrass;
 	}
