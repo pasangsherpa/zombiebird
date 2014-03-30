@@ -2,6 +2,7 @@ package com.pasang.GameObjects;
 
 import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
+import com.pasang.Helpers.AssetLoader;
 
 public class Bird {
 
@@ -52,6 +53,7 @@ public class Bird {
 	}
 
 	public void onClick() {
+		AssetLoader.flap.play();
 		velocity.y = -140;
 	}
 

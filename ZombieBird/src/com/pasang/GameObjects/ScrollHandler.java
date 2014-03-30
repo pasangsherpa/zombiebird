@@ -50,6 +50,18 @@ public class ScrollHandler {
 
 	}
 
+	public void stop() {
+		frontGrass.stop();
+		backGrass.stop();
+		pipe1.stop();
+		pipe2.stop();
+		pipe3.stop();
+	}
+	
+	public boolean collides(Bird bird) {
+		return (pipe1.collides(bird) || pipe2.collides(bird) || pipe3.collides(bird));
+	}
+	
 	public Grass getFrontGrass() {
 		return frontGrass;
 	}
