@@ -11,6 +11,7 @@ public class Bird {
 	private Vector2 acceleration;
 
 	private float rotation; // bird rotation
+	private float originalY;
 	private int height;
 	private int width;
 
@@ -22,16 +23,19 @@ public class Bird {
 
 		this.width = width;
 		this.height = height;
-
+		this.originalY = y;
 		position = new Vector2(x, y);
 		velocity = new Vector2(0, 0);
 		acceleration = new Vector2(0, 460);
-
 		boundingCircle = new Circle();
-
 		isAlive = true;
 	}
 
+    public void updateReady(float runTime) {
+        position.y = 2 * (float) Math.sin(7 * runTime) + originalY;
+    }
+
+	
 	public void update(float delta) {
 		velocity.add(acceleration.cpy().scl(delta));
 		velocity.y = velocity.y > 200 ? 200 : velocity.y;

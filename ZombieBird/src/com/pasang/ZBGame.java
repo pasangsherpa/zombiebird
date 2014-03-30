@@ -2,14 +2,14 @@ package com.pasang;
 
 import com.badlogic.gdx.Game;
 import com.pasang.Helpers.AssetLoader;
-import com.pasang.Screens.GameScreen;
+import com.pasang.Screens.SplashScreen;
 
 public class ZBGame extends Game {
 
 	@Override
 	public void create() {
 		AssetLoader.load();
-		setScreen(new GameScreen());
+		setScreen(new SplashScreen(this));
 	}
 	
 	@Override

@@ -12,10 +12,10 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 public class AssetLoader {
 	private static final String PREFS_HIGH_SCORE = "highScore";
 
-	public static Texture texture;
+	public static Texture texture, logoTexture;
 	public static Animation birdAnimation;
 	public static TextureRegion bird, birdDown, birdUp, bg, grass, skullUp,
-			skullDown, bar;
+			skullDown, bar, playButtonUp, playButtonDown, title, appTitle, logo;
 	public static Sound dead, flap, coin;
 	public static BitmapFont font, shadow;
 	public static Preferences prefs;
@@ -26,8 +26,25 @@ public class AssetLoader {
 			prefs.putInteger(PREFS_HIGH_SCORE, 0);
 		}
 
+		logoTexture = new Texture(Gdx.files.internal("data/logo.png"));
+		logoTexture.setFilter(TextureFilter.Linear, TextureFilter.Linear);
+
+		logo = new TextureRegion(logoTexture, 0, 0, 512, 114);
+
 		texture = new Texture(Gdx.files.internal("data/texture.png"));
 		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
+
+        appTitle = new TextureRegion(texture, 0, 55, 135, 24);
+        appTitle.flip(false, true);
+
+        playButtonUp = new TextureRegion(texture, 0, 83, 29, 16);
+		playButtonUp.flip(false, true);
+
+		playButtonDown = new TextureRegion(texture, 29, 83, 29, 16);
+		playButtonDown.flip(false, true);
+
+		title = new TextureRegion(texture, 0, 55, 135, 24);
+		title.flip(false, true);
 
 		bg = new TextureRegion(texture, 0, 0, 136, 43);
 		bg.flip(false, true);

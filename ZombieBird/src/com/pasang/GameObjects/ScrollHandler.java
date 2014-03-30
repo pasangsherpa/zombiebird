@@ -26,6 +26,22 @@ public class ScrollHandler {
 				yPos);
 	}
 
+	public void updateReady(float delta) {
+
+		frontGrass.update(delta);
+		backGrass.update(delta);
+
+		// Same with grass
+		if (frontGrass.isScrolledLeft()) {
+			frontGrass.reset(backGrass.getTailX());
+
+		} else if (backGrass.isScrolledLeft()) {
+			backGrass.reset(frontGrass.getTailX());
+
+		}
+
+	}
+
 	public void update(float delta) {
 
 		frontGrass.update(delta);
