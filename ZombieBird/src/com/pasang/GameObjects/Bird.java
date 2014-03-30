@@ -16,6 +16,8 @@ public class Bird {
 
 	private Circle boundingCircle;
 
+	private boolean isAlive;
+
 	public Bird(float x, float y, int width, int height) {
 
 		this.width = width;
@@ -26,6 +28,8 @@ public class Bird {
 		acceleration = new Vector2(0, 460);
 
 		boundingCircle = new Circle();
+
+		isAlive = true;
 	}
 
 	public void update(float delta) {
@@ -44,7 +48,7 @@ public class Bird {
 		}
 
 		// Rotate counterclockwise
-		if (isFalling()) {
+		if (isFalling() || !isAlive) {
 			rotation += 480 * delta;
 			if (rotation > 90) {
 				rotation = 90;
@@ -53,8 +57,23 @@ public class Bird {
 	}
 
 	public void onClick() {
-		AssetLoader.flap.play();
-		velocity.y = -140;
+		if (isAlive) {
+			AssetLoader.flap.play();
+			velocity.y = -140;
+		}
+	}
+
+	public void die() {
+		isAlive = false;
+		velocity.y = 0;
+	}
+
+	public void decelerate() {
+		acceleration.y = 0;
+	}
+
+	public boolean isAlive() {
+		return isAlive;
 	}
 
 	public boolean isFalling() {
@@ -62,7 +81,7 @@ public class Bird {
 	}
 
 	public boolean shouldntFlap() {
-		return velocity.y > 70;
+		return velocity.y > 70 || !isAlive;
 	}
 
 	public float getRotation() {
