@@ -2,13 +2,16 @@ package com.pasang.Helpers;
 
 import com.badlogic.gdx.InputProcessor;
 import com.pasang.GameObjects.Bird;
+import com.pasang.GameWorld.GameWorld;
 
 public class InputHandler implements InputProcessor {
 
+	private GameWorld world;
 	private Bird bird;
 	
-	public InputHandler(Bird bird) {
-		this.bird = bird;
+	public InputHandler(GameWorld world) {
+		this.world = world;
+		this.bird = world.getBird();
 	}
 	
 	@Override
@@ -28,7 +31,14 @@ public class InputHandler implements InputProcessor {
 
 	@Override
 	public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+		if (world.isReady()) {
+			world.start();
+		}
 		bird.onClick();
+		
+		if (world.isGameOver()) {
+			world.restart();
+		}
 		return true;
 	}
 

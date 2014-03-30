@@ -8,7 +8,6 @@ public class ZBGame extends Game {
 
 	@Override
 	public void create() {
-		System.out.println("Game Created..");
 		AssetLoader.load();
 		setScreen(new GameScreen());
 	}

@@ -1,6 +1,7 @@
 package com.pasang.Helpers;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.Texture.TextureFilter;
@@ -16,10 +17,10 @@ public class AssetLoader {
 			skullDown, bar;
 	public static Sound dead, flap, coin;
 	public static BitmapFont font, shadow;
-	
+	public static Preferences prefs;
 	
 	public static void load() {
-
+		
 		texture = new Texture(Gdx.files.internal("data/texture.png"));
 		texture.setFilter(TextureFilter.Nearest, TextureFilter.Nearest);
 
