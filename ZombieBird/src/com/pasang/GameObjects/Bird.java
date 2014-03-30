@@ -1,5 +1,6 @@
 package com.pasang.GameObjects;
 
+import com.badlogic.gdx.math.Circle;
 import com.badlogic.gdx.math.Vector2;
 
 public class Bird {
@@ -12,6 +13,8 @@ public class Bird {
 	private int height;
 	private int width;
 
+	private Circle boundingCircle;
+
 	public Bird(float x, float y, int width, int height) {
 
 		this.width = width;
@@ -20,12 +23,16 @@ public class Bird {
 		position = new Vector2(x, y);
 		velocity = new Vector2(0, 0);
 		acceleration = new Vector2(0, 460);
+
+		boundingCircle = new Circle();
 	}
 
 	public void update(float delta) {
 		velocity.add(acceleration.cpy().scl(delta));
 		velocity.y = velocity.y > 200 ? 200 : velocity.y;
 		position.add(velocity.cpy().scl(delta));
+
+		boundingCircle.set(position.x + 9, position.y + 6, 6.5f);
 
 		// Rotate counterclockwise
 		if (velocity.y < 0) {
@@ -74,6 +81,10 @@ public class Bird {
 
 	public int getWidth() {
 		return width;
+	}
+
+	public Circle getBoundingCircle() {
+		return boundingCircle;
 	}
 
 }

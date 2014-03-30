@@ -1,6 +1,7 @@
 package com.pasang.GameWorld;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -9,6 +10,9 @@ import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.pasang.GameObjects.Bird;
+import com.pasang.GameObjects.Grass;
+import com.pasang.GameObjects.Pipe;
+import com.pasang.GameObjects.ScrollHandler;
 import com.pasang.Helpers.AssetLoader;
 
 public class GameRenderer {
@@ -24,6 +28,9 @@ public class GameRenderer {
 
 	// Game Objects
 	private Bird bird;
+	private Pipe pipe1, pipe2, pipe3;
+	private Grass frontGrass, backGrass;
+	private ScrollHandler scroller;
 
 	// Game Assets
 	private TextureRegion bg, grass;
@@ -54,6 +61,12 @@ public class GameRenderer {
 
 	private void initGameObjects() {
 		bird = world.getBird();
+		scroller = world.getScoller();
+		frontGrass = scroller.getFrontGrass();
+		backGrass = scroller.getBackGrass();
+		pipe1 = scroller.getPipe1();
+		pipe2 = scroller.getPipe2();
+		pipe3 = scroller.getPipe3();
 	}
 
 	private void initAssets() {
@@ -70,10 +83,46 @@ public class GameRenderer {
 
 	private void drawPipes() {
 
+		batcher.draw(bar, pipe1.getX(), pipe1.getY(), pipe1.getWidth(),
+				pipe1.getHeight());
+		batcher.draw(bar, pipe1.getX(), pipe1.getY() + pipe1.getHeight() + 45,
+				pipe1.getWidth(), midPointY + 66 - (pipe1.getHeight() + 45));
+
+		batcher.draw(bar, pipe2.getX(), pipe2.getY(), pipe2.getWidth(),
+				pipe2.getHeight());
+		batcher.draw(bar, pipe2.getX(), pipe2.getY() + pipe2.getHeight() + 45,
+				pipe2.getWidth(), midPointY + 66 - (pipe2.getHeight() + 45));
+
+		batcher.draw(bar, pipe3.getX(), pipe3.getY(), pipe3.getWidth(),
+				pipe3.getHeight());
+		batcher.draw(bar, pipe3.getX(), pipe3.getY() + pipe3.getHeight() + 45,
+				pipe3.getWidth(), midPointY + 66 - (pipe3.getHeight() + 45));
 	}
 
 	private void drawSkulls() {
 
+		batcher.draw(skullUp, pipe1.getX() - 1,
+				pipe1.getY() + pipe1.getHeight() - 14, 24, 14);
+		batcher.draw(skullDown, pipe1.getX() - 1,
+				pipe1.getY() + pipe1.getHeight() + 45, 24, 14);
+
+		batcher.draw(skullUp, pipe2.getX() - 1,
+				pipe2.getY() + pipe2.getHeight() - 14, 24, 14);
+		batcher.draw(skullDown, pipe2.getX() - 1,
+				pipe2.getY() + pipe2.getHeight() + 45, 24, 14);
+
+		batcher.draw(skullUp, pipe3.getX() - 1,
+				pipe3.getY() + pipe3.getHeight() - 14, 24, 14);
+		batcher.draw(skullDown, pipe3.getX() - 1,
+				pipe3.getY() + pipe3.getHeight() + 45, 24, 14);
+	}
+
+	private void drawGrass() {
+
+		batcher.draw(grass, frontGrass.getX(), frontGrass.getY(),
+				frontGrass.getWidth(), frontGrass.getHeight());
+		batcher.draw(grass, backGrass.getX(), backGrass.getY(),
+				backGrass.getWidth(), backGrass.getHeight());
 	}
 
 	public void render(float runTime) {
@@ -106,7 +155,12 @@ public class GameRenderer {
 		// This is good for performance when drawing images that do not require
 		// transparency.
 		batcher.disableBlending();
-		batcher.draw(AssetLoader.bg, 0, midPointY + 23, 136, 43);
+		batcher.draw(bg, 0, midPointY + 23, 136, 43);
+
+		drawGrass();
+		drawPipes();
+		batcher.enableBlending();
+		drawSkulls();
 
 		// The bird needs transparency, so we enable that again.
 		batcher.enableBlending();
@@ -126,7 +180,11 @@ public class GameRenderer {
 
 		// End SpriteBatch
 		batcher.end();
-
+		
+		shapeRenderer.begin(ShapeType.Filled);
+		shapeRenderer.setColor(Color.RED);
+		shapeRenderer.circle(bird.getBoundingCircle().x, bird.getBoundingCircle().y, bird.getBoundingCircle().radius);
+		shapeRenderer.end();
 	}
 
 }
