@@ -27,7 +27,7 @@ public class Scrollable {
 
 	public void reset(float newX) {
 		position.x = newX;
-		isScrolledLeft = true;
+		isScrolledLeft = false;
 	}
 
 	public boolean isScrolledLeft() {

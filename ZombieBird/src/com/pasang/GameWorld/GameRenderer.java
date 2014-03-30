@@ -61,7 +61,7 @@ public class GameRenderer {
 
 	private void initGameObjects() {
 		bird = world.getBird();
-		scroller = world.getScoller();
+		scroller = world.getScroller();
 		frontGrass = scroller.getFrontGrass();
 		backGrass = scroller.getBackGrass();
 		pipe1 = scroller.getPipe1();
@@ -127,64 +127,95 @@ public class GameRenderer {
 
 	public void render(float runTime) {
 
-		// Fill the entire screen with black, to prevent potential flickering.
-		Gdx.gl.glClearColor(0, 0, 0, 1);
-		Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
+        Gdx.gl.glClearColor(0, 0, 0, 1);
+        Gdx.gl.glClear(GL10.GL_COLOR_BUFFER_BIT);
 
-		// Begin ShapeRenderer
-		shapeRenderer.begin(ShapeType.Filled);
+        shapeRenderer.begin(ShapeType.Filled);
 
-		// Draw Background color
-		shapeRenderer.setColor(55 / 255.0f, 80 / 255.0f, 100 / 255.0f, 1);
-		shapeRenderer.rect(0, 0, 136, midPointY + 66);
+        // Draw Background color
+        shapeRenderer.setColor(55 / 255.0f, 80 / 255.0f, 100 / 255.0f, 1);
+        shapeRenderer.rect(0, 0, 136, midPointY + 66);
 
-		// Draw Grass
-		shapeRenderer.setColor(111 / 255.0f, 186 / 255.0f, 45 / 255.0f, 1);
-		shapeRenderer.rect(0, midPointY + 66, 136, 11);
+        // Draw Grass
+        shapeRenderer.setColor(111 / 255.0f, 186 / 255.0f, 45 / 255.0f, 1);
+        shapeRenderer.rect(0, midPointY + 66, 136, 11);
 
-		// Draw Dirt
-		shapeRenderer.setColor(147 / 255.0f, 80 / 255.0f, 27 / 255.0f, 1);
-		shapeRenderer.rect(0, midPointY + 77, 136, 52);
+        // Draw Dirt
+        shapeRenderer.setColor(147 / 255.0f, 80 / 255.0f, 27 / 255.0f, 1);
+        shapeRenderer.rect(0, midPointY + 77, 136, 52);
 
-		// End ShapeRenderer
-		shapeRenderer.end();
+        shapeRenderer.end();
 
-		// Begin SpriteBatch
-		batcher.begin();
-		// Disable transparency
-		// This is good for performance when drawing images that do not require
-		// transparency.
-		batcher.disableBlending();
-		batcher.draw(bg, 0, midPointY + 23, 136, 43);
+        batcher.begin();
+        batcher.disableBlending();
+        batcher.draw(bg, 0, midPointY + 23, 136, 43);
 
-		drawGrass();
-		drawPipes();
-		batcher.enableBlending();
-		drawSkulls();
+        // 1. Draw Grass
+        drawGrass();
 
-		// The bird needs transparency, so we enable that again.
-		batcher.enableBlending();
+        // 2. Draw Pipes
+        drawPipes();
+        batcher.enableBlending();
 
-		if (bird.shouldntFlap()) {
-			batcher.draw(birdMid, bird.getX(), bird.getY(),
-					bird.getWidth() / 2.0f, bird.getHeight() / 2.0f,
-					bird.getWidth(), bird.getHeight(), 1, 1, bird.getRotation());
-		} else {
-			// Draw bird at its coordinates
-			// Pass in the runTime variable to get the current frame.
-			batcher.draw(birdAnimation.getKeyFrame(runTime), bird.getX(),
-					bird.getY(), bird.getWidth() / 2.0f,
-					bird.getHeight() / 2.0f, bird.getWidth(), bird.getHeight(),
-					1, 1, bird.getRotation());
-		}
+        // 3. Draw Skulls (requires transparency)
+        drawSkulls();
 
-		// End SpriteBatch
-		batcher.end();
-		
-		shapeRenderer.begin(ShapeType.Filled);
-		shapeRenderer.setColor(Color.RED);
-		shapeRenderer.circle(bird.getBoundingCircle().x, bird.getBoundingCircle().y, bird.getBoundingCircle().radius);
-		shapeRenderer.end();
+        if (bird.shouldntFlap()) {
+            batcher.draw(birdMid, bird.getX(), bird.getY(),
+                    bird.getWidth() / 2.0f, bird.getHeight() / 2.0f,
+                    bird.getWidth(), bird.getHeight(), 1, 1, bird.getRotation());
+
+        } else {
+            batcher.draw(birdAnimation.getKeyFrame(runTime), bird.getX(),
+                    bird.getY(), bird.getWidth() / 2.0f,
+                    bird.getHeight() / 2.0f, bird.getWidth(), bird.getHeight(),
+                    1, 1, bird.getRotation());
+        }
+
+        batcher.end();
+
+        shapeRenderer.begin(ShapeType.Filled);
+        shapeRenderer.setColor(Color.RED);
+        shapeRenderer.circle(bird.getBoundingCircle().x,
+                bird.getBoundingCircle().y, bird.getBoundingCircle().radius);
+
+        /*
+         * Excuse the mess below. Temporary code for testing bounding
+         * rectangles.
+         */
+        // Bar up for pipes 1 2 and 3
+        shapeRenderer.rect(pipe1.getBarUp().x, pipe1.getBarUp().y,
+                pipe1.getBarUp().width, pipe1.getBarUp().height);
+        shapeRenderer.rect(pipe2.getBarUp().x, pipe2.getBarUp().y,
+                pipe2.getBarUp().width, pipe2.getBarUp().height);
+        shapeRenderer.rect(pipe3.getBarUp().x, pipe3.getBarUp().y,
+                pipe3.getBarUp().width, pipe3.getBarUp().height);
+
+        // Bar down for pipes 1 2 and 3
+        shapeRenderer.rect(pipe1.getBarDown().x, pipe1.getBarDown().y,
+                pipe1.getBarDown().width, pipe1.getBarDown().height);
+        shapeRenderer.rect(pipe2.getBarDown().x, pipe2.getBarDown().y,
+                pipe2.getBarDown().width, pipe2.getBarDown().height);
+        shapeRenderer.rect(pipe3.getBarDown().x, pipe3.getBarDown().y,
+                pipe3.getBarDown().width, pipe3.getBarDown().height);
+
+        // Skull up for Pipes 1 2 and 3
+        shapeRenderer.rect(pipe1.getSkullUp().x, pipe1.getSkullUp().y,
+                pipe1.getSkullUp().width, pipe1.getSkullUp().height);
+        shapeRenderer.rect(pipe2.getSkullUp().x, pipe2.getSkullUp().y,
+                pipe2.getSkullUp().width, pipe2.getSkullUp().height);
+        shapeRenderer.rect(pipe3.getSkullUp().x, pipe3.getSkullUp().y,
+                pipe3.getSkullUp().width, pipe3.getSkullUp().height);
+
+        // Skull down for Pipes 1 2 and 3
+        shapeRenderer.rect(pipe1.getSkullDown().x, pipe1.getSkullDown().y,
+                pipe1.getSkullDown().width, pipe1.getSkullDown().height);
+        shapeRenderer.rect(pipe2.getSkullDown().x, pipe2.getSkullDown().y,
+                pipe2.getSkullDown().width, pipe2.getSkullDown().height);
+        shapeRenderer.rect(pipe3.getSkullDown().x, pipe3.getSkullDown().y,
+                pipe3.getSkullDown().width, pipe3.getSkullDown().height);
+
+        shapeRenderer.end();
 	}
 
 }

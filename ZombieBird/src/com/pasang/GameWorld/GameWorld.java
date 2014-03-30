@@ -22,7 +22,7 @@ public class GameWorld {
 		return bird;
 	}
 
-	public ScrollHandler getScoller() {
+	public ScrollHandler getScroller() {
 		return scoller;
 	}
 
