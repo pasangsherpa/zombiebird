@@ -3,7 +3,9 @@ package com.pasang.GameWorld;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL10;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer.ShapeType;
 import com.pasang.GameObjects.Bird;
@@ -20,6 +22,15 @@ public class GameRenderer {
 	private int gameHeight;
 	private int midPointY;
 
+	// Game Objects
+	private Bird bird;
+
+	// Game Assets
+	private TextureRegion bg, grass;
+	private Animation birdAnimation;
+	private TextureRegion birdMid, birdDown, birdUp;
+	private TextureRegion skullUp, skullDown, bar;
+
 	public GameRenderer(GameWorld world, int gameHeight, int midPointY) {
 
 		this.world = world;
@@ -35,12 +46,37 @@ public class GameRenderer {
 
 		shapeRenderer = new ShapeRenderer();
 		shapeRenderer.setProjectionMatrix(camera.combined);
+
+		// initialize
+		initGameObjects();
+		initAssets();
+	}
+
+	private void initGameObjects() {
+		bird = world.getBird();
+	}
+
+	private void initAssets() {
+		bg = AssetLoader.bg;
+		grass = AssetLoader.grass;
+		birdAnimation = AssetLoader.birdAnimation;
+		birdMid = AssetLoader.bird;
+		birdDown = AssetLoader.birdDown;
+		birdUp = AssetLoader.birdUp;
+		skullUp = AssetLoader.skullUp;
+		skullDown = AssetLoader.skullDown;
+		bar = AssetLoader.bar;
+	}
+
+	private void drawPipes() {
+
+	}
+
+	private void drawSkulls() {
+
 	}
 
 	public void render(float runTime) {
-
-		// We will move these outside of the loop for performance later.
-		Bird bird = world.getBird();
 
 		// Fill the entire screen with black, to prevent potential flickering.
 		Gdx.gl.glClearColor(0, 0, 0, 1);
@@ -75,11 +111,18 @@ public class GameRenderer {
 		// The bird needs transparency, so we enable that again.
 		batcher.enableBlending();
 
-		// Draw bird at its coordinates. Retrieve the Animation object from
-		// AssetLoader
-		// Pass in the runTime variable to get the current frame.
-		batcher.draw(AssetLoader.birdAnimation.getKeyFrame(runTime),
-				bird.getX(), bird.getY(), bird.getWidth(), bird.getHeight());
+		if (bird.shouldntFlap()) {
+			batcher.draw(birdMid, bird.getX(), bird.getY(),
+					bird.getWidth() / 2.0f, bird.getHeight() / 2.0f,
+					bird.getWidth(), bird.getHeight(), 1, 1, bird.getRotation());
+		} else {
+			// Draw bird at its coordinates
+			// Pass in the runTime variable to get the current frame.
+			batcher.draw(birdAnimation.getKeyFrame(runTime), bird.getX(),
+					bird.getY(), bird.getWidth() / 2.0f,
+					bird.getHeight() / 2.0f, bird.getWidth(), bird.getHeight(),
+					1, 1, bird.getRotation());
+		}
 
 		// End SpriteBatch
 		batcher.end();

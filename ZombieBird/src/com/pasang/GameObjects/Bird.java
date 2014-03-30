@@ -13,10 +13,10 @@ public class Bird {
 	private int width;
 
 	public Bird(float x, float y, int width, int height) {
-		
+
 		this.width = width;
 		this.height = height;
-		
+
 		position = new Vector2(x, y);
 		velocity = new Vector2(0, 0);
 		acceleration = new Vector2(0, 460);
@@ -26,10 +26,34 @@ public class Bird {
 		velocity.add(acceleration.cpy().scl(delta));
 		velocity.y = velocity.y > 200 ? 200 : velocity.y;
 		position.add(velocity.cpy().scl(delta));
+
+		// Rotate counterclockwise
+		if (velocity.y < 0) {
+			rotation -= 600 * delta;
+			if (rotation < -20) {
+				rotation = -20;
+			}
+		}
+
+		// Rotate counterclockwise
+		if (isFalling()) {
+			rotation += 480 * delta;
+			if (rotation > 90) {
+				rotation = 90;
+			}
+		}
 	}
 
 	public void onClick() {
 		velocity.y = -140;
+	}
+
+	public boolean isFalling() {
+		return velocity.y > 110;
+	}
+
+	public boolean shouldntFlap() {
+		return velocity.y > 70;
 	}
 
 	public float getRotation() {
